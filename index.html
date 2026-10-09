@@ -1489,6 +1489,21 @@ html.lenis,html.lenis body{height:auto}
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; transition-delay:0s !important}
   html{scroll-behavior:auto}
 }
+
+/* ================= Layout system: one side gutter and one section rhythm for every section ================= */
+:root{ --gutter:clamp(16px,2.2vw,32px); --cWidth:calc(100% - 2 * var(--gutter)); --sec-y:clamp(48px,4.5vw,80px) }
+.career-section,.contact-section{max-width:var(--cMaxWidth)}
+.wk,.stk,.pb,.manual{padding-top:var(--sec-y); padding-bottom:var(--sec-y)}
+.career-section{padding:var(--sec-y) 0; margin-bottom:0}
+.motto{padding:var(--sec-y) 0}
+.motto li{font-size:clamp(32px,10.2vw,200px)}
+footer{padding-left:0; padding-right:0; padding-top:var(--sec-y)}
+.contact-section{margin-top:0}
+.landing-intro h1{line-height:1.02 !important}
+.landing-intro h1 span{display:inline-block; margin-top:.04em; margin-left:-.08em}
+@media (min-width:901px){ .pb-grid{align-items:stretch} .pb-list .pb-tab{flex:1} }
+.icons-section{transition:opacity .4s ease, visibility .4s}
+.at-footer .icons-section{opacity:0; visibility:hidden}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1872,6 +1887,10 @@ function start(){
     addEventListener("wheel",enter,{once:true,passive:true}); addEventListener("touchmove",enter,{once:true,passive:true});
   })(t0);
 }
+
+/* ===== Fixed icons step aside when the footer, which repeats them, is on screen ===== */
+(()=>{ const f=document.querySelector("footer"); if(!f||!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(([e])=>document.documentElement.classList.toggle("at-footer",e.isIntersecting),{rootMargin:"0px 0px -15% 0px"}).observe(f); })();
 
 /* ===== Fit giant words to width ===== */
 function fit(){
