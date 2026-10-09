@@ -1503,6 +1503,9 @@ footer{padding-left:0; padding-right:0; padding-top:var(--sec-y)}
 .landing-intro h1 span{display:inline-block; margin-top:.04em; margin-left:-.08em}
 @media (min-width:901px){ .pb-grid{align-items:stretch} .pb-list .pb-tab{flex:1} }
 .icons-section{transition:opacity .4s ease, visibility .4s}
+/* phones: Resume lives in the menu instead of a sideways button over the text */
+.nav-resume{display:none}
+@media (max-width:767px){ .nav-resume{display:list-item} .header ul li.nav-resume{color:var(--pen)} .resume-button{display:none} }
 .at-footer .icons-section{opacity:0; visibility:hidden}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
@@ -1547,6 +1550,7 @@ footer{padding-left:0; padding-right:0; padding-top:var(--sec-y)}
     <li><a class="hover-link" href="#about"><div class="hover-in">ABOUT<div aria-hidden="true">ABOUT</div></div></a></li>
     <li><a class="hover-link" href="#work"><div class="hover-in">WORK<div aria-hidden="true">WORK</div></div></a></li>
     <li><a class="hover-link" href="#contact"><div class="hover-in">CONTACT<div aria-hidden="true">CONTACT</div></div></a></li>
+    <li class="nav-resume"><a class="hover-link" id="navResume" href="#"><div class="hover-in">RESUME ↗<div aria-hidden="true">RESUME ↗</div></div></a></li>
   </ul>
 </header>
 <div class="icons-section">
@@ -1985,7 +1989,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") setMenu(false); })
 
 /* ===== Links ===== */
 const mail=`mailto:${CONFIG.email}`;
-$("#touch").href=mail; $("#siMail").href=mail; $("#siLinked").href=CONFIG.linkedin; $("#resumeBtn").href=CONFIG.resume; $("#fEmail").href=mail; $("#fEmail").textContent=CONFIG.email; $("#fResume").href=CONFIG.resume; $("#fLinked").href=CONFIG.linkedin;
+$("#touch").href=mail; $("#siMail").href=mail; $("#siLinked").href=CONFIG.linkedin; $("#resumeBtn").href=CONFIG.resume; $("#navResume").href=CONFIG.resume; $("#fEmail").href=mail; $("#fEmail").textContent=CONFIG.email; $("#fResume").href=CONFIG.resume; $("#fLinked").href=CONFIG.linkedin;
 $("#fNotion").href=CONFIG.notion; if($("#manBox")) $("#manBox").href=CONFIG.resume||"resume.pdf"; $("#yr").textContent=new Date().getFullYear();
 
 
