@@ -1507,6 +1507,45 @@ footer{padding-left:0; padding-right:0; padding-top:var(--sec-y)}
 .nav-resume{display:none}
 @media (max-width:767px){ .nav-resume{display:list-item} .header ul li.nav-resume{color:var(--pen)} .resume-button{display:none} }
 .at-footer .icons-section{opacity:0; visibility:hidden}
+
+/* ================= Work categories: three tabs over the work list ================= */
+.wk-cats{position:relative; isolation:isolate; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(10px,1.2vw,16px); margin-bottom:clamp(20px,2.4vw,36px)}
+.wk-cat{position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"n c" "t t" "s a"; align-items:end; gap:6px 16px; min-height:clamp(170px,14vw,220px); padding:clamp(16px,1.6vw,24px); border:1px solid var(--line); border-radius:18px; background:transparent; color:var(--fg); text-align:left; cursor:pointer; transition:color .4s ease, border-color .3s, transform .5s cubic-bezier(.34,1.56,.64,1)}
+.wk-cat-n{grid-area:n; align-self:start; font-family:var(--serif); font-style:italic; font-size:clamp(40px,3.6vw,60px); line-height:.9; color:var(--c1); transition:color .4s}
+.wk-cat-c{grid-area:c; align-self:start; padding-top:6px; font-family:var(--dot); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); transition:color .4s}
+.wk-cat-c b{font-weight:400; color:var(--fg); transition:color .4s}
+.wk-cat-t{grid-area:t; padding-top:clamp(18px,2vw,32px); font-weight:700; font-stretch:106%; letter-spacing:-.03em; line-height:1; font-size:clamp(22px,2.1vw,36px)}
+.wk-cat-s{grid-area:s; align-self:center; font-size:clamp(14px,1.05vw,16px); line-height:1.35; color:var(--muted); transition:color .4s}
+.wk-cat-a{grid-area:a; display:grid; place-items:center; width:40px; height:40px; border-radius:50%; border:1px solid color-mix(in srgb,var(--fg) 24%,transparent); font-size:16px; transition:transform .55s cubic-bezier(.34,1.56,.64,1), border-color .3s, background-color .3s, color .3s}
+.wk-cat:hover{border-color:var(--fg); transform:translateY(-4px)}
+.wk-cat:hover .wk-cat-a{transform:translateX(4px)}
+.wk-cat.on{color:#111; border-color:transparent; transform:none}
+.wk-cat.on .wk-cat-n,.wk-cat.on .wk-cat-c,.wk-cat.on .wk-cat-c b{color:#111}
+.wk-cat.on .wk-cat-s{color:rgba(17,17,17,.72)}
+.wk-cat.on .wk-cat-a{border-color:#111; background:#111; color:var(--c1); transform:rotate(90deg)}
+.wk-cats.ready .wk-cat.on,.wk-cats.ready .wk-cat.on *{transition-delay:.2s}
+.wk-ind{position:absolute; z-index:0; left:0; top:0; border-radius:18px; background:var(--c1); pointer-events:none; box-shadow:0 24px 50px -26px color-mix(in srgb,var(--c1) 75%,transparent)}
+.wk-cats.ready .wk-ind{transition:transform .65s cubic-bezier(.65,0,.35,1), width .65s cubic-bezier(.65,0,.35,1), height .65s cubic-bezier(.65,0,.35,1)}
+@media (max-width:760px){
+  .wk-cats{grid-template-columns:1fr; gap:8px}
+  .wk-cat{min-height:0; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:"n t a" "n s a"; align-items:center; gap:2px 14px; padding:14px 16px}
+  .wk-cat-n{align-self:center; width:44px; font-size:36px}
+  .wk-cat-t{padding-top:0; font-size:20px}
+  .wk-cat-c{display:none}
+  .wk-cat-s{font-size:13px}
+  .wk-cat-a{width:34px; height:34px}
+  .wk-cat:hover{transform:none}
+}
+
+.wk-t .ww{display:inline-flex; white-space:nowrap}
+/* switching: rows slide out, the next set slides in and its titles roll up letter by letter */
+.wk-stage{position:relative; transition:height .6s cubic-bezier(.65,0,.35,1)}
+.wk-stage.sizing{overflow:hidden}
+.wk-list.leaving > li{opacity:0; transform:translateX(calc(var(--dir,1) * -48px)); transition:opacity .26s ease, transform .3s cubic-bezier(.6,0,.8,.4); transition-delay:calc(var(--r,0) * 30ms)}
+.wk-list.entering > li{animation:wkIn .75s cubic-bezier(.2,.8,.2,1) backwards; animation-delay:calc(var(--r,0) * 80ms)}
+.wk-list.entering .wl > span:first-child{animation:wlUp .7s cubic-bezier(.2,.8,.2,1) backwards; animation-delay:calc(var(--r,0) * 80ms + var(--i) * 16ms + 50ms)}
+@keyframes wkIn{from{opacity:0; transform:translateX(calc(var(--dir,1) * 64px))}}
+@keyframes wlUp{from{transform:translateY(100%)}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1620,9 +1659,12 @@ footer{padding-left:0; padding-right:0; padding-top:var(--sec-y)}
   <section class="wk px" id="work">
     <div class="wk-head">
       <h2 class="rv-clip">Selected <em>work</em></h2>
-      <p>Four projects. Hover for a preview, click for the full story.</p>
+      <p>Things I've built, problems I've solved, and products I've taken apart. Pick a category, then click any row for the full story.</p>
     </div>
-    <ol class="wk-list" id="wkList"></ol>
+    <div class="wk-cats" id="wkCats" role="tablist" aria-label="Kinds of work"></div>
+    <div class="wk-stage" id="wkStage" role="tabpanel">
+      <ol class="wk-list" id="wkList"></ol>
+    </div>
   </section>
 
   <section class="stk px" id="stack">
@@ -1855,11 +1897,55 @@ const PROJECTS = {
     role:"Product lead for an accessibility layer: research, LLM-powered summarization, and adaptive pacing.",
     outcomes:[["45%","faster task completion"],["12","neurodivergent users tested"]],
     note:"An academic capstone concept for Coursera's platform. Not affiliated with Coursera."},
+  /* ----- Product teardowns (type:"teardown" relabels "Impact" as "By the numbers" in the pop-up) ----- */
+  instacart:{title:"Instacart Household Rules", kind:"Grocery delivery, solo concept", type:"teardown",
+    tags:["Discovery","Proto-personas","Assumption mapping","PRD","North Star metric","A/B test design"],
+    problem:"Replacement preferences are set item by item, order by order. That's tedious, so most people skip it and let the shopper guess.",
+    role:"Solo product manager over 3 weeks: discovery, problem framing, PRD, metrics, and experiment design.",
+    did:["Mapped how replacements work today and found three places it breaks: too much per-item effort, choices that don't stick, and a safety net that assumes you're watching your phone",
+      "Ranked the assumptions behind the idea by risk, with a way to test each one",
+      "Compared a single global setting, smarter defaults, and Household Rules, and chose the hardest because it's the only one that fixes both halves of the problem",
+      "Scoped a first version with four rule types (brand, attribute, price, fallback), saved in one tap right after a rejected swap",
+      "Set a North Star of orders delivered as expected, with guardrails on shopper time, refunds, and cancellations, and an A/B test randomized by customer"],
+    learned:"The hard part wasn't the screens. It was the definitions: what counts as a good swap, and who decides when two rules disagree.",
+    outcomes:[["3","fixes compared before picking one"],["4","rule types in the first version"],["3 wks","from discovery to test plan"]],
+    note:"Independent concept project, not affiliated with Instacart. Based on public information; personas and assumptions are hypotheses to validate.",
+    link:"https://app.notion.com/p/6f02bf85f21e4966994099e6dc4012c4"},
+  miro:{title:"Miro AI", kind:"Collaboration SaaS, AI teardown", type:"teardown",
+    tags:["AI strategy","Trade-off analysis","Enterprise SaaS","Multimodal AI","Trust and governance"],
+    problem:"Teams rarely struggle to come up with ideas on a whiteboard. They struggle to organize, synthesize, and act on hundreds of sticky notes spread across too many tools.",
+    role:"A teardown of Miro's AI launch: the product strategy, the decisions behind it, and what each one cost.",
+    did:["Broke down the feature set: turning boards into documents, clustering sticky notes by theme, on-canvas Sidekicks and Flows, and enterprise governance",
+      "Analyzed three big decisions and their trade-offs: AI on the canvas instead of a standalone assistant, several model providers instead of one, and a confidence UI that keeps a human in the loop",
+      "Followed one customer story, a facilitation firm sorting 200 to 300 sticky notes per workshop, to see the features in real use"],
+    learned:"The hardest part isn't building the AI. It's designing for trust, so it helps people instead of replacing them.",
+    outcomes:[["3","product decisions and their trade-offs"],["5","lessons for AI product teams"]],
+    note:"Independent analysis based on public information. Not affiliated with Miro.",
+    link:"https://app.notion.com/p/2ae148e21a7c807b9c33dcae8f585c55"},
+  apple:{title:"Apple Fitness+ Studios", kind:"Fitness and wearables, program concept", type:"teardown",
+    tags:["Program planning","Critical path","Earned value","Vendor management","Risk register","Power BI"],
+    problem:"Fitness+ lives on screens. Taking it into physical studios means keeping construction, vendors, and software moving together when the product exists both online and on site.",
+    role:"Program lead for a 12-month concept plan: roadmap, schedule, budget, risk, and the Apple Watch integration.",
+    did:["Built the 12-month roadmap with milestones and success metrics, and controlled the schedule with the critical path method",
+      "Set up risk registers and approval matrices for multi-vendor dependencies, with contingency buffers in every vendor schedule",
+      "Planned Apple Watch and Apple TV sync for in-studio classes, with real-time telemetry dashboards",
+      "Tracked cost and schedule with earned value analysis, and re-sequenced parallel work when equipment delays hit"],
+    learned:"Hybrid products don't succeed through rigid control. They need adaptive planning and real-time data.",
+    outcomes:[["12 mo","launch roadmap, studio to app"],["4","phases, from planning to recovery"],["15–20%","contingency built into vendor schedules"]],
+    note:"Concept project. Not affiliated with Apple.",
+    link:"https://app.notion.com/p/2a9148e21a7c804f90b7de83b0e172b1"},
   creds:{title:"Credentials"},
   ai:{title:"AI workflow"}
 };
 
 Object.entries(PROJECT_DETAILS).forEach(([k,v])=>{ if(PROJECTS[k]) Object.assign(PROJECTS[k],v); });
+
+/* ===== Work shelves: the three tabs above the work list. keys = PROJECTS entries, in order ===== */
+const WORK_CATS = [
+  {id:"projects",  t:"Product Projects",     s:"Products I've built or worked on",          unit:"projects",     keys:["match","smart"]},
+  {id:"cases",     t:"Product Case Studies", s:"End-to-end problem solving",                unit:"case studies", keys:["work","tracks"]},
+  {id:"teardowns", t:"Product Teardowns",    s:"Analyzing and improving existing products", unit:"teardowns",    keys:["instacart","miro","apple"]}
+];
 
 const SKILLS = [];
 const byId = Object.fromEntries(SKILLS.map(s=>[s.id,s]));
@@ -1907,12 +1993,14 @@ function fit(){
 
 /* ===== Work cards ===== */
 function buildCards(){
-  const keys=["work","tracks","match","smart"], list=$("#wkList"); if(!list) return;
-  const letters=t=>[...t].map((ch,i)=>ch===" "?'<span class="wl sp"> </span>':`<span class="wl" style="--i:${i}"><span>${esc(ch)}</span><span>${esc(ch)}</span></span>`).join("");
-  list.innerHTML=keys.map((k,i)=>{ const p=PROJECTS[k], o=p.outcomes[0];
-    const stats=p.outcomes.map(([n,l])=>{ const m=String(n).match(/^(\D*)([\d.]+)(.*)$/);
-      return `<li><b ${m?`data-pre="${esc(m[1])}" data-n="${m[2]}" data-post="${esc(m[3])}"`:""}>${esc(n)}</b><span>${esc(l)}</span></li>`; }).join("");
-    return `<li><button class="wk-row" type="button" data-p="${k}" aria-label="Open case study: ${esc(p.title)}">
+  const list=$("#wkList"), tabs=$("#wkCats"), stage=$("#wkStage"); if(!list||!tabs||!stage) return;
+  // each letter rolls on hover; letters are grouped by word so long titles wrap between words, not mid-word
+  const letters=t=>{ let i=0; return t.split(" ").map(w=>`<span class="ww">${[...w].map(ch=>`<span class="wl" style="--i:${i++}"><span>${esc(ch)}</span><span>${esc(ch)}</span></span>`).join("")}</span>`).join('<span class="wl sp"> </span>'); };
+  // numbers like "15–20%" have a second number in them, so they don't count up
+  const nums=n=>{ const m=String(n).match(/^(\D*)([\d.]+)(.*)$/); return m&&!/\d/.test(m[3])?`data-pre="${esc(m[1])}" data-n="${m[2]}" data-post="${esc(m[3])}"`:""; };
+  const rowsFor=c=>c.keys.filter(k=>PROJECTS[k]&&PROJECTS[k].outcomes).map((k,i)=>{ const p=PROJECTS[k], o=p.outcomes[0];
+    const stats=p.outcomes.map(([n,l])=>`<li><b ${nums(n)}>${esc(n)}</b><span>${esc(l)}</span></li>`).join("");
+    return `<li style="--r:${i}"><button class="wk-row" type="button" data-p="${k}" aria-label="Open ${p.type==="teardown"?"teardown":"case study"}: ${esc(p.title)}">
       <span class="wk-n">0${i+1}</span>
       <span class="wk-main"><span class="wk-t" aria-hidden="true">${letters(p.title)}</span><span class="wk-k">${esc(p.kind)}</span></span>
       <span class="wk-m"><b>${esc(o[0])}</b> ${esc(o[1])}</span>
@@ -1928,7 +2016,48 @@ function buildCards(){
   const countUp=row=>{ if(reduce) return; row.querySelectorAll(".wk-stats b[data-n]").forEach(b=>{
     const end=parseFloat(b.dataset.n), dec=(b.dataset.n.split(".")[1]||"").length, t0=performance.now();
     (function tick(t){ const k=Math.min(1,(t-t0)/900), e=1-Math.pow(1-k,3); b.textContent=b.dataset.pre+(end*e).toFixed(dec)+b.dataset.post; if(k<1) requestAnimationFrame(tick); })(t0); }); };
-  list.querySelectorAll(".wk-row").forEach(r=>{ r.addEventListener("pointerenter",()=>countUp(r)); r.addEventListener("focus",()=>countUp(r)); });
+  const bind=()=>list.querySelectorAll(".wk-row").forEach(r=>{ r.addEventListener("pointerenter",()=>countUp(r)); r.addEventListener("focus",()=>countUp(r)); });
+
+  // the three category tabs, with a highlight that slides to the chosen one
+  tabs.innerHTML=WORK_CATS.map((c,i)=>`<button class="wk-cat${i===0?" on":""}" type="button" role="tab" id="wkTab-${c.id}" aria-controls="wkStage" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-i="${i}">
+      <span class="wk-cat-n">0${i+1}</span>
+      <span class="wk-cat-c"><b>${c.keys.length}</b> ${esc(c.unit)}</span>
+      <span class="wk-cat-t">${esc(c.t)}</span>
+      <span class="wk-cat-s">${esc(c.s)}</span>
+      <span class="wk-cat-a" aria-hidden="true">→</span>
+    </button>`).join("")+'<span class="wk-ind" aria-hidden="true"></span>';
+  const btns=[...tabs.querySelectorAll(".wk-cat")], ind=tabs.querySelector(".wk-ind");
+  let cur=0, timer=null;
+  const place=()=>{ const b=btns[cur]; ind.style.transform=`translate(${b.offsetLeft}px,${b.offsetTop}px)`; ind.style.width=b.offsetWidth+"px"; ind.style.height=b.offsetHeight+"px"; };
+  const render=c=>{ list.innerHTML=rowsFor(c); bind(); };
+  function swap(c){
+    clearTimeout(timer);
+    if(!MOTION){ render(c); return; }
+    stage.style.height=stage.offsetHeight+"px"; stage.classList.add("sizing");
+    list.classList.remove("entering"); list.classList.add("leaving");
+    timer=setTimeout(()=>{
+      list.classList.remove("leaving"); render(c); list.classList.add("entering");
+      stage.style.height=list.offsetHeight+"px";
+      timer=setTimeout(()=>{ stage.style.height=""; stage.classList.remove("sizing"); list.classList.remove("entering"); },1000);
+    },330);
+  }
+  function select(i,focus){
+    if(focus) btns[i].focus();
+    if(i===cur) return;
+    stage.style.setProperty("--dir",i>cur?1:-1); cur=i;
+    btns.forEach((b,j)=>{ const on=j===i; b.classList.toggle("on",on); b.setAttribute("aria-selected",on); b.tabIndex=on?0:-1; });
+    stage.setAttribute("aria-labelledby",btns[i].id);
+    place(); swap(WORK_CATS[i]);
+  }
+  tabs.addEventListener("click",e=>{ const b=e.target.closest(".wk-cat"); if(b) select(+b.dataset.i); });
+  tabs.addEventListener("keydown",e=>{ const n=btns.length, k=e.key;
+    const to=k==="ArrowRight"||k==="ArrowDown"?(cur+1)%n : k==="ArrowLeft"||k==="ArrowUp"?(cur-1+n)%n : k==="Home"?0 : k==="End"?n-1 : -1;
+    if(to>=0){ e.preventDefault(); select(to,true); } });
+  stage.setAttribute("aria-labelledby",btns[0].id);
+  render(WORK_CATS[0]); place();
+  requestAnimationFrame(()=>tabs.classList.add("ready"));
+  addEventListener("resize",place);
+  if(document.fonts) document.fonts.ready.then(place);
 }
 
 const dlg=$("#dlg"), dlgBody=$("#dlgBody");
@@ -1938,10 +2067,10 @@ var openCase=function(k){
     <h3>Problem</h3><p>${esc(p.problem)}</p>
     <h3>My role</h3><p>${esc(p.role)}</p>
     ${p.did&&p.did.length?`<h3>What I did</h3><ul class="did">${p.did.map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`:""}
-    <h3>Impact</h3><ul class="outs">${p.outcomes.map(([n,l])=>`<li><b>${esc(n)}</b>${esc(l)}</li>`).join("")}</ul>
+    <h3>${p.type==="teardown"?"By the numbers":"Impact"}</h3><ul class="outs">${p.outcomes.map(([n,l])=>`<li><b>${esc(n)}</b>${esc(l)}</li>`).join("")}</ul>
     ${p.learned?`<h3>What I learned</h3><p class="learned">${esc(p.learned)}</p>`:""}
     ${p.note?`<p class="note">${esc(p.note)}</p>`:""}
-    ${link?`<a class="cs-link" href="${esc(link)}" target="_blank" rel="noopener">Full case study ↗</a>`:""}`;
+    ${link?`<a class="cs-link" href="${esc(link)}" target="_blank" rel="noopener">${p.type==="teardown"?"Full teardown":"Full case study"} ↗</a>`:""}`;
   if(!dlg.open) dlg.showModal();
 };
 
@@ -2091,7 +2220,7 @@ dlg.addEventListener("close",()=>lenis&&lenis.start());
 function countUp(root){
   if(!MOTION) return;
   root.querySelectorAll(".outs b").forEach(b=>{
-    const m=b.textContent.match(/^(\$?)(\d+(?:\.\d+)?)(.*)$/); if(!m||/^[a-z]/i.test(m[3])) return;
+    const m=b.textContent.match(/^(\$?)(\d+(?:\.\d+)?)(.*)$/); if(!m||/^[a-z]/i.test(m[3])||/\d/.test(m[3])) return;
     const [_,pre,num,suf]=m, end=parseFloat(num), dec=(num.split(".")[1]||"").length, t0=performance.now(), dur=1100;
     (function step(t){ const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
       b.textContent=pre+(end*e).toFixed(dec)+suf; if(k<1) requestAnimationFrame(step); })(t0);
