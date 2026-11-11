@@ -1231,6 +1231,12 @@ body,.aurora i,.career-info-box,.pb-panel,.flow-card{transition:background-color
 .art-match{background:var(--c2)}
 .art-match::before,.art-match::after{content:""; position:absolute; top:8%; width:42%; aspect-ratio:1; border-radius:50%; border:2px solid #161616}
 .art-match::before{right:26%; background:var(--c1)} .art-match::after{right:4%; mix-blend-mode:multiply; background:#E9E5DD}
+.art-forecast{background:var(--c3)}
+.art-forecast::before{content:""; position:absolute; left:8%; right:8%; bottom:12%; height:52%; background:repeating-linear-gradient(90deg,#161616 0 9%,transparent 9% 14%); clip-path:polygon(0 70%,16% 48%,32% 62%,48% 24%,64% 42%,80% 6%,100% 28%,100% 100%,0 100%)}
+.art-forecast::after{content:""; position:absolute; right:7%; top:9%; width:22%; aspect-ratio:1; border-radius:50%; border:2px solid #161616; background:var(--c2)}
+.art-glucose{background:#E9E5DD; background-image:radial-gradient(circle,#161616 2.2px,transparent 2.6px); background-size:26px 26px}
+.art-glucose::before{content:""; position:absolute; left:0; right:0; top:34%; height:30%; background:var(--c1); border-top:2px solid #161616; border-bottom:2px solid #161616}
+.art-glucose::after{content:""; position:absolute; right:8%; top:12%; width:30%; aspect-ratio:1; border-radius:50%; border:2px solid #161616; background:var(--c2); mix-blend-mode:multiply}
 
 /* ---------- Build your PM ---------- */
 .lab{padding-top:clamp(64px,8vw,112px); padding-bottom:clamp(64px,8vw,112px)}
@@ -1897,6 +1903,30 @@ const PROJECTS = {
     role:"Product lead for an accessibility layer: research, LLM-powered summarization, and adaptive pacing.",
     outcomes:[["45%","faster task completion"],["12","neurodivergent users tested"]],
     note:"An academic capstone concept for Coursera's platform. Not affiliated with Coursera."},
+  forecast:{title:"Retail Demand Forecasting", kind:"Retail analytics, solo data project", art:"art-forecast",
+    tags:["SQL","DuckDB","Python","LightGBM","Demand planning","Sell-through"],
+    problem:"Store planners often forecast with \"same as last week\", which misses seasonality, events, and price changes. Empty shelves also hide how much demand was really there.",
+    role:"Solo analyst on 59M+ Walmart daily sales records: SQL models, demand forecasting, stockout and price analysis.",
+    did:["Unpivoted a 1,941-column sales file into 59M+ rows in DuckDB and built 6 SQL models with CTEs and window functions",
+      "Trained a LightGBM model on 23M+ rows with 28 SQL-built features, tested on a held-out 28-day window against seasonal-naive and moving-average baselines",
+      "Flagged 28,970 likely stockouts as improbable zero-sales streaks with gaps-and-islands SQL, and estimated the sales they cost",
+      "Measured price elasticity by category and flagged 7,770 slow-moving item-stores for sell-through review"],
+    learned:"The model's gains show up where planning decisions are made: by category and store, not item by item.",
+    outcomes:[["32%","lower forecast error than a seasonal-naive baseline"],["$2.1M","estimated lost sales from likely stockouts"],["59M+","daily sales records processed"]],
+    note:"Built on the public Walmart M5 dataset. Stockouts and lost sales are estimates: the data has no inventory records.",
+    link:false},
+  glucose:{title:"Glucose Analytics Pipeline", kind:"Health data, solo data project", art:"art-glucose",
+    tags:["dbt","Snowflake","PostgreSQL","SQL","Data quality","Tableau"],
+    problem:"Wearable health data is messy: sensors drop out, wear periods overlap, and timestamps duplicate. If those errors reach the analysis, metrics like time-in-range are wrong.",
+    role:"Solo analyst: dbt models on Snowflake and PostgreSQL, data quality tests, and a Tableau dashboard.",
+    did:["Built a dbt pipeline over 1.2M+ glucose monitor, smartwatch, and meal-log records from 250 study participants",
+      "Wrote 48 dbt tests for sensor dropouts, overlapping wear intervals, and duplicate timestamps, quarantining the 5.4% of records that failed",
+      "Modeled daily time-in-range and glycemic variability, with rolling 7-day metrics from SQL window functions",
+      "Built a Tableau dashboard for post-meal glucose spikes and wear-time adherence (92% on average)"],
+    learned:"Testing data before modeling is cheaper than explaining wrong metrics afterwards.",
+    outcomes:[["99.8%","data integrity across downstream models"],["48","automated data quality tests"],["1.2M+","records from 250 participants"]],
+    note:"Built on a public clinical study dataset.",
+    link:false},
   /* ----- Product teardowns (type:"teardown" relabels "Impact" as "By the numbers" in the pop-up) ----- */
   instacart:{title:"Instacart Household Rules", kind:"Grocery delivery, solo concept", type:"teardown",
     tags:["Discovery","Proto-personas","Assumption mapping","PRD","North Star metric","A/B test design"],
@@ -1942,7 +1972,7 @@ Object.entries(PROJECT_DETAILS).forEach(([k,v])=>{ if(PROJECTS[k]) Object.assign
 
 /* ===== Work shelves: the three tabs above the work list. keys = PROJECTS entries, in order ===== */
 const WORK_CATS = [
-  {id:"projects",  t:"Product Projects",     s:"Products I've built or worked on",          unit:"projects",     keys:["match","smart"]},
+  {id:"projects",  t:"Product Projects",     s:"Products I've built or worked on",          unit:"projects",     keys:["match","smart","forecast","glucose"]},
   {id:"cases",     t:"Product Case Studies", s:"End-to-end problem solving",                unit:"case studies", keys:["work","tracks"]},
   {id:"teardowns", t:"Product Teardowns",    s:"Analyzing and improving existing products", unit:"teardowns",    keys:["instacart","miro","apple"]}
 ];
@@ -2062,7 +2092,7 @@ function buildCards(){
 
 const dlg=$("#dlg"), dlgBody=$("#dlgBody");
 var openCase=function(k){
-  const p=PROJECTS[k], link=p.link||CONFIG.notion;
+  const p=PROJECTS[k], link=p.link===false?"":(p.link||CONFIG.notion);
   dlgBody.innerHTML=`<p class="kind">${esc(p.kind)}</p><h2 id="dlgTitle">${esc(p.title)}</h2>
     <h3>Problem</h3><p>${esc(p.problem)}</p>
     <h3>My role</h3><p>${esc(p.role)}</p>
