@@ -1904,17 +1904,18 @@ const PROJECTS = {
     outcomes:[["45%","faster task completion"],["12","neurodivergent users tested"]],
     note:"An academic capstone concept for Coursera's platform. Not affiliated with Coursera."},
   forecast:{title:"Retail Demand Forecasting", kind:"Retail analytics, solo data project", art:"art-forecast",
-    tags:["SQL","DuckDB","Python","LightGBM","Demand planning","Sell-through"],
+    tags:["SQL","DuckDB","Python","LightGBM","Power BI","DAX","Demand planning","Sell-through"],
     problem:"Store planners often forecast with \"same as last week\", which misses seasonality, events, and price changes. Empty shelves also hide how much demand was really there.",
-    role:"Solo analyst on 59M+ Walmart daily sales records: SQL models, demand forecasting, stockout and price analysis.",
+    role:"Solo analyst on 59M+ Walmart daily sales records: SQL models, demand forecasting, stockout and price analysis, and a Power BI dashboard.",
     did:["Unpivoted a 1,941-column sales file into 59M+ rows in DuckDB and built 6 SQL models with CTEs and window functions",
       "Trained a LightGBM model on 23M+ rows with 28 SQL-built features, tested on a held-out 28-day window against seasonal-naive and moving-average baselines",
       "Flagged 28,970 likely stockouts as improbable zero-sales streaks with gaps-and-islands SQL, and estimated the sales they cost",
-      "Measured price elasticity by category and flagged 7,770 slow-moving item-stores for sell-through review"],
+      "Measured price elasticity by category and flagged 7,770 slow-moving item-stores for sell-through review",
+      "Built a 4-page Power BI dashboard (forecast accuracy, stockouts, sell-through, pricing) with 27 DAX measures"],
     learned:"The model's gains show up where planning decisions are made: by category and store, not item by item.",
     outcomes:[["32%","lower forecast error than a seasonal-naive baseline"],["$2.1M","estimated lost sales from likely stockouts"],["59M+","daily sales records processed"]],
     note:"Built on the public Walmart M5 dataset. Stockouts and lost sales are estimates: the data has no inventory records.",
-    link:false},
+    link:"retail-forecasting-dashboard.pdf", linkLabel:"View Power BI dashboard (PDF)"},
   glucose:{title:"Glucose Analytics Pipeline", kind:"Health data, solo data project", art:"art-glucose",
     tags:["dbt","Snowflake","PostgreSQL","SQL","Data quality","Tableau"],
     problem:"Wearable health data is messy: sensors drop out, wear periods overlap, and timestamps duplicate. If those errors reach the analysis, metrics like time-in-range are wrong.",
@@ -2100,7 +2101,7 @@ var openCase=function(k){
     <h3>${p.type==="teardown"?"By the numbers":"Impact"}</h3><ul class="outs">${p.outcomes.map(([n,l])=>`<li><b>${esc(n)}</b>${esc(l)}</li>`).join("")}</ul>
     ${p.learned?`<h3>What I learned</h3><p class="learned">${esc(p.learned)}</p>`:""}
     ${p.note?`<p class="note">${esc(p.note)}</p>`:""}
-    ${link?`<a class="cs-link" href="${esc(link)}" target="_blank" rel="noopener">${p.type==="teardown"?"Full teardown":"Full case study"} ↗</a>`:""}`;
+    ${link?`<a class="cs-link" href="${esc(link)}" target="_blank" rel="noopener">${esc(p.linkLabel||(p.type==="teardown"?"Full teardown":"Full case study"))} ↗</a>`:""}`;
   if(!dlg.open) dlg.showModal();
 };
 
